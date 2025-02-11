@@ -49,6 +49,8 @@ pipeline {
                      withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
                          sh '''
                              git clone https://github.com/Pavankurugodu/To-Do-App-kubernetes.git
+                             ls -la  # List files to verify the directory structure
+                             cd To-Do-App-kubernetes
                              cd manifest
                             
                              git config user.email "pavanpavi56@gmail.com"
