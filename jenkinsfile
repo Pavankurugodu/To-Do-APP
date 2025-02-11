@@ -47,7 +47,7 @@ pipeline {
 
                      // Clone the manifest repository
                      withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
-                         sh '''
+                         sh """
                              git clone https://github.com/Pavankurugodu/To-Do-App-kubernetes.git
                              ls -la  # List files to verify the directory structure
                              cd To-Do-App-kubernetes
@@ -64,7 +64,7 @@ pipeline {
                              git commit -m "new build with imgTag build-${previousBuildNum}"
                             
                              git push https://\${GITHUB_TOKEN}@github.com/Pavankurugodu/To-Do-App-kubernetes.git master
-                         '''
+                         """
                      }
                  }
              }
