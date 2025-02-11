@@ -39,41 +39,41 @@ pipeline {
             }
         }
         
-    //    stage('Update Kubernetes Manifest') {
-    //         steps {
-    //             script {
-    //                 // Calculate previous build number (similar to CircleCI's approach)
-    //                 def previousBuildNum = (BUILD_NUMBER.toInteger() - 1).toString()
+        stage('Update Kubernetes Manifest') {
+             steps {
+                 script {
+                      Calculate previous build number (similar to CircleCI's approach)
+                     def previousBuildNum = (BUILD_NUMBER.toInteger() - 1).toString()
                     
-    //                 // Clone the manifest repository
-    //                 withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
-    //                     sh """
-    //                         git clone https://github.com/piyushsachdeva/kube_manifest.git
-    //                         cd kube_manifest
+                     // Clone the manifest repository
+                     withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                         sh """
+                             git clone https://github.com/Pavankurugodu/To-Do-App-kubernetes.git
+                             cd manifest
                             
-    //                         git config user.email "pavanpavi56@gmail.com"
-    //                         git config user.name "PavanKurugodu"
+                             git config user.email "pavanpavi56@gmail.com"
+                             git config user.name "PavanKurugodu"
                             
-    //                         # Update the deployment file with new image tag
-    //                         sed -i "s/build-.*/build-${previousBuildNum}/g" manifest/deployment.yaml
+                             # Update the deployment file with new image tag
+                             sed -i "s/build-.*/build-${previousBuildNum}/g" manifest/deployment.yaml
                             
-    //                         # Commit and push changes
-    //                         git add .
-    //                         git commit -m "new build with imgTag build-${previousBuildNum}"
+                             # Commit and push changes
+                             git add .
+                             git commit -m "new build with imgTag build-${previousBuildNum}"
                             
-    //                         git push https://\${GITHUB_TOKEN}@github.com/piyushsachdeva/kube_manifest.git main
-    //                     """
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+                             git push https://\${GITHUB_TOKEN}@github.com/Pavankurugodu/To-Do-App-kubernetes.git master
+                         """
+                     }
+                 }
+             }
+         }
+     }
     
-    // post {
-        // always {
-            // Cleanup
-            // cleanWs()
+     post {
+         always {
+             Cleanup
+             cleanWs()
         }
-    // }
-//  } 
+     }
+  } 
 }
