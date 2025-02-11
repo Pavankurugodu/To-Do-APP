@@ -42,12 +42,12 @@ pipeline {
         stage('Update Kubernetes Manifest') {
              steps {
                  script {
-                      Calculate previous build number (similar to CircleCI's approach)
+                    //   Calculate previous build number (similar to CircleCI's approach)
                      def previousBuildNum = (BUILD_NUMBER.toInteger() - 1).toString()
                     
                      // Clone the manifest repository
                      withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
-                         sh """
+                         sh '''
                              git clone https://github.com/Pavankurugodu/To-Do-App-kubernetes.git
                              cd manifest
                             
@@ -62,7 +62,7 @@ pipeline {
                              git commit -m "new build with imgTag build-${previousBuildNum}"
                             
                              git push https://\${GITHUB_TOKEN}@github.com/Pavankurugodu/To-Do-App-kubernetes.git master
-                         """
+                         '''
                      }
                  }
              }
@@ -74,6 +74,6 @@ pipeline {
              Cleanup
              cleanWs()
         }
-     }
-  } 
-}
+    }
+} 
+
