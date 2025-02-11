@@ -43,8 +43,8 @@ pipeline {
              steps {
                  script {
                     //   Calculate previous build number (similar to CircleCI's approach)
-                     def previousBuildNum = (env.BUILD_NUMBER.toInteger() - 1).toString()
-                    
+                     def previousBuildNum = env.BUILD_NUMBER ? (env.BUILD_NUMBER.toInteger() - 1).toString() : '0'
+
                      // Clone the manifest repository
                      withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
                          sh '''
@@ -56,7 +56,6 @@ pipeline {
                              git config user.name "PavanKurugodu"
                             
                              # Update the deployment file with new image tag
-                             sed -i "s/build-.*/build-${previousBuildNum}/g" manifest/deployment.yaml
                              sed -i "s/build-.*/build-${previousBuildNum}/g" manifest/deployment.yaml
 
                             
