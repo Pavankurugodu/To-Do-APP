@@ -58,7 +58,7 @@ pipeline {
                              git config user.name "PavanKurugodu"
                             
                              # Update the deployment file with new image tag
-                             sed -i "s/build-.*/build-${previousBuildNum}/g" To-Do-App-kubernetes/To-Do-APP/manifest/deployment.yaml
+                             sed -i "s/build-.*/build-${previousBuildNum}/g" manifest/deployment.yaml
                             
                              # Commit and push changes
                              git add .
