@@ -43,7 +43,7 @@ pipeline {
              steps {
                  script {
                     //   Calculate previous build number (similar to CircleCI's approach)
-                     def previousBuildNum = (BUILD_NUMBER.toInteger() - 1).toString()
+                     def previousBuildNum = (env.BUILD_NUMBER.toInteger() - 1).toString()
                     
                      // Clone the manifest repository
                      withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
@@ -51,14 +51,14 @@ pipeline {
                              git clone https://github.com/Pavankurugodu/To-Do-App-kubernetes.git
                              ls -la  # List files to verify the directory structure
                              cd To-Do-App-kubernetes
-                             # List files recursively to find 'deployment.yaml'
-                             ls -R
-                            
+                             
                              git config user.email "pavanpavi56@gmail.com"
                              git config user.name "PavanKurugodu"
                             
                              # Update the deployment file with new image tag
                              sed -i "s/build-.*/build-${previousBuildNum}/g" manifest/deployment.yaml
+                             sed -i "s/build-.*/build-${previousBuildNum}/g" manifest/deployment.yaml
+
                             
                              # Commit and push changes
                              git add .
