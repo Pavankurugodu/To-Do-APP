@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_CREDENTIALS = credentials('docker-credentials')
+        GITHUB_TOKEN = credentials('github-token')
+        DOCKER_IMAGE = 'pavirocks/todo-app'
+    }     
+    stages {
+        stage ("Clean workspace") {
+            steps {
+                cleanWs()
+            }
+        }
+        stage ("Git checkout") {
+            steps {
+                git branch: 'master', url: 'https://github.com/Pavankurugodu/To-Do-APP.git'
+            }
+        }
+        stage('Build and Push Docker Image') {
+            steps {
+                script {
+                    // Calculate version/tag
+                    def version = "build-${BUILD_NUMBER}"
+                    echo "Building version: ${version}"
+                    
+                    // Build Docker image
+                    sh "docker build -t ${DOCKER_IMAGE}:${version} ."
+                    
+                    // Login to Docker Hub and push
+                    withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh """
+                            echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
+                            docker push ${DOCKER_IMAGE}:${version}
+                        """
+                    }
+                }
+            }
+        }
+        
+    //    stage('Update Kubernetes Manifest') {
+    //         steps {
+    //             script {
+    //                 // Calculate previous build number (similar to CircleCI's approach)
+    //                 def previousBuildNum = (BUILD_NUMBER.toInteger() - 1).toString()
+                    
+    //                 // Clone the manifest repository
+    //                 withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+    //                     sh """
+    //                         git clone https://github.com/piyushsachdeva/kube_manifest.git
+    //                         cd kube_manifest
+                            
+    //                         git config user.email "pavanpavi56@gmail.com"
+    //                         git config user.name "PavanKurugodu"
+                            
+    //                         # Update the deployment file with new image tag
+    //                         sed -i "s/build-.*/build-${previousBuildNum}/g" manifest/deployment.yaml
+                            
+    //                         # Commit and push changes
+    //                         git add .
+    //                         git commit -m "new build with imgTag build-${previousBuildNum}"
+                            
+    //                         git push https://\${GITHUB_TOKEN}@github.com/piyushsachdeva/kube_manifest.git main
+    //                     """
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    
+    post {
+        always {
+            // Cleanup
+            cleanWs()
+        }
+    }
+ } 
+}
